@@ -138,6 +138,7 @@ db = {
 
     "db_schedule_mahasiswa"          : {
         "schedule"                   : "",
+        "day"                        : "",
         "name-class"                 : "",
         "name-room"                  : "",
         "name-teacher"               : "",

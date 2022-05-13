@@ -51,6 +51,7 @@ class schedule_app:
             data = request.form
 
             schedule      = data["schedule"]
+            day           = data["day"]
             name_classz   = data["name-class"]
             name_teacher  = data["name-teacher"]
             name_room     = data["name-room"]
@@ -59,6 +60,7 @@ class schedule_app:
                 self.mgdDB , "db_schedule_mahasiswa"
             )
             mdl_add_new_schedule.put( "schedule" , schedule)
+            mdl_add_new_schedule.put( "day" , day)
             mdl_add_new_schedule.put( "name-class" , name_classz )
             mdl_add_new_schedule.put( "name-teacher" , name_teacher )
             mdl_add_new_schedule.put( "name-room" , name_room )
@@ -75,7 +77,11 @@ class schedule_app:
 
             bulk_multi.execute({})
 
-            user_view     = self.mgdDB.db_schedule_mahasiswa.find()
+            user_view     = self.mgdDB.db_schedule_mahasiswa.find(
+                {
+                    "status": {"$not":{"$regex":"DEACTIVE"}}
+                }
+            ).sort("day" , 1)
             # ).sort("nama " , 1).skip( int(page) * int(num_per_page)).limit(
             #     int(int(page * num_per_page) + num_per_page)
             # )
@@ -83,19 +89,31 @@ class schedule_app:
 
             response = render_template(
                 "form-schedule.html",
-                NEW_SCHEDULE = schedule,
-                NEW_NAME_CLASS    = name_classz,
-                NEW_NAME_ROOM  = name_room,
-                NEW_NAME_TEACHER    = name_teacher,
-                ALL_DATA = ALL_DATA
+                NEW_SCHEDULE    = schedule,
+                NEW_DAY         = day,
+                NEW_NAME_CLASS  = name_classz,
+                NEW_NAME_ROOM   = name_room,
+                NEW_NAME_TEACHER= name_teacher,
+                ALL_DATA        = ALL_DATA
             )
         else:
+            user_view     = self.mgdDB.db_schedule_mahasiswa.find(
+                {
+                    "status": {"$not":{"$regex":"DEACTIVE"}},
+                    # "is_root": "FALSE",
+                    # "pkey": {
+                    #     "$nin": data_array_added
+                    # }
+                }
+            ).sort("day" , 1)
+            # ).sort("nama " , 1).skip( int(page) * int(num_per_page)).limit(
+            #     int(int(page * num_per_page) + num_per_page)
+            # )
+            ALL_DATA     = list( user_view )
+            
             response = render_template(
-                "form-schedule.html"
-                # COMPANY_ADMIN_NAME = contact_person,
-                # USERNAME    = username,
-                # COMPANY_ID  = company_id,
-                # PASSWORD    = password
+                "form-schedule.html",
+                ALL_DATA = ALL_DATA
             )
         
         # response = {

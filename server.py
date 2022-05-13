@@ -11,7 +11,7 @@ sys.path.append("pytavia_stdlib"  )
 sys.path.append("pytavia_storage" ) 
 sys.path.append("pytavia_modules" ) 
 sys.path.append("pytavia_modules/rest_api_controller")
-sys.path.append("pytavia_modules/form_schedule")  
+sys.path.append("pytavia_modules/form_schedule") 
 
 # adding comments
 from pytavia_stdlib  import utils
@@ -23,7 +23,8 @@ from pytavia_stdlib  import idgen
 from rest_api_controller import module1 
 
 from form_schedule import schedule_app
-
+from form_schedule import delete_schedule_app
+from form_schedule import edit_schedule_app
 
 ##########################################################
 
@@ -60,6 +61,27 @@ def form():
     response = schedule_app.schedule_app(app).process( params )
     return response
 # end def
+
+@app.route("/deleteschedule", methods=["POST"])
+def deleteform():
+    params = request.args.to_dict()
+    response = delete_schedule_app.delete_schedule_app(app).process( params )
+    return response
+# end def
+
+@app.route("/editschedule", methods=["POST"])
+def editform():
+    params = request.args.to_dict()
+    response = edit_schedule_app.edit_schedule_app(app).process( params )
+    return response
+# end def
+
+# @app.route("/updateschedule", methods=["POST"])
+# def updateform():
+#     params = request.args.to_dict()
+#     response = update_schedule_app.update_schedule_app(app).process( params )
+#     return response
+# # end def
 
 @app.route("/v1/api/api-v1", methods=["GET"])
 def api_v1():

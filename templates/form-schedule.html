@@ -3,9 +3,10 @@
 <head>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
     <style>
         #cover {
-            background: #222 url('https://unsplash.it/1920/1080/?student') center center no-repeat;
+            background: #222 url('https://unsplash.it/1920/1080/?random') center center no-repeat;
             background-size: cover;
             height: 100%;
         }
@@ -36,74 +37,147 @@
             <div class="container">
                 <div class="row text-white">
                     <div class=" col-sm-10 mx-auto text-center form p-4">
-                        <h1 class="display-4 py-2 text-truncate">JADWAL SAYA APP</h1>
-                       {{ NEW_SCHEDULE }}
+                        <h1 class="display-4 py-2 text-truncate">JADWAL SAYA    APP</h1>
+                       <!-- {{ NEW_SCHEDULE }}
                        {{ NEW_NAME_CLASS }}
                        {{ NEW_NAME_ROOM }}
                        {{ NEW_NAME_TEACHER  }}
-                       {{ ALL_DATA }}
+                       {{ ALL_DATA }} -->
+                       <h3>
                         <div class="px-2">
-                            <form action="/formschedule" method="POST" class="justify-content-center">
+                            <!-- FOR FORM EDIT -->
+                            {% if TYPE == 'EDIT'%}
+                            <form action="/editschedule" method="POST" class="justify-content-center">
                                 <div class="form-group">
                                     <label class="justify-content-left">Jam Pelajaran</label>
-                                    <input type="text" class="form-control" placeholder="Jane Doe" name="schedule">
+                                    <input type="time" class="form-control" placeholder="jadwal pelajaran" value="{{NEW_SCHEDULE}}" name="schedule">
+                                </div>
+                                <div class="form-group">
+                                    <label>Hari</label>
+                                    <select class="form-control" placeholder="nama hari" value="{{NEW_DAY}}" name="day">
+                                        <option value="1" {% if NEW_DAY == '1'%} selected {%endif%}>minggu</option>
+                                        <option value="2" {% if NEW_DAY == '2'%} selected {%endif%}>senin</option>
+                                        <option value="3" {% if NEW_DAY == '3'%} selected {%endif%}>selasa</option>
+                                        <option value="4" {% if NEW_DAY == '4'%} selected {%endif%}>rabu</option>
+                                        <option value="5" {% if NEW_DAY == '5'%} selected {%endif%}>kamis</option>
+                                        <option value="6" {% if NEW_DAY == '6'%} selected {%endif%}>jumat</option>
+                                        <option value="7" {% if NEW_DAY == '7'%} selected {%endif%}>sabtu</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Mata Kuliah</label>
-                                    <input type="text" class="form-control" placeholder="jane.doe@example.com" name="name-class">
+                                    <input type="text" class="form-control" placeholder="nama mata kuliah ex: seni budaya" value="{{NEW_NAME_CLASS}}" name="name-class">
                                 </div>
                                 <div class="form-group">
                                     <label>Dosen</label>
-                                    <input type="text" class="form-control" placeholder="jane.doe@example.com" name="name-teacher">
+                                    <input type="text" class="form-control" placeholder="nama dosen ex:'prof. andrew'" value="{{NEW_NAME_TEACHER}}" name="name-teacher">
                                 </div>
                                 <div class="form-group">
                                     <label>Ruangan</label>
-                                    <input type="text" class="form-control" placeholder="jane.doe@example.com" name="name-room">
+                                    <input type="text" class="form-control" placeholder="nama gedung dan nomor ex: 'gedung Mawar 102'" value="{{NEW_NAME_ROOM}}" name="name-room">
+                                </div>
+                                <input type="hidden" class="form-control" value="update" name="type">
+                                <input type="hidden" class="form-control" value="{{PKEY}}" name="pkey">
+                                <button type="submit" class="btn btn-primary btn-lg">SUBMIT</button>
+                            </form>
+                            <!-- END FORM EDIT -->
+                            <!-- FOR FORM CREATE -->
+                            {% else %}
+                                {% if NEW_DAY %}
+                                    <span class="badge badge-success">jadawal baru mata kuliah <b>{{NEW_NAME_CLASS}}</b>  berhasil ditambahkan!!</span></h3>
+                                {% endif %}
+                            <form action="/formschedule" method="POST" class="justify-content-center">
+                                <div class="form-group">
+                                    <label class="justify-content-left">Jam Pelajaran</label>
+                                    <input type="time" class="form-control" placeholder="jadwal pelajaran" name="schedule">
+                                </div>
+                                <div class="form-group">
+                                    <label>Hari</label>
+                                    <select class="form-control" placeholder="nama hari" name="day">
+                                        <option value="1">minggu</option>
+                                        <option value="2">senin</option>
+                                        <option value="3">selasa</option>
+                                        <option value="4">rabu</option>
+                                        <option value="5">kamis</option>
+                                        <option value="6">jumat</option>
+                                        <option value="7">sabtu</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mata Kuliah</label>
+                                    <input type="text" class="form-control" placeholder="nama mata kuliah ex: seni budaya" name="name-class">
+                                </div>
+                                <div class="form-group">
+                                    <label>Dosen</label>
+                                    <input type="text" class="form-control" placeholder="nama dosen ex:'prof. andrew'" name="name-teacher">
+                                </div>
+                                <div class="form-group">
+                                    <label>Ruangan</label>
+                                    <input type="text" class="form-control" placeholder="nama gedung dan nomor ex: 'gedung Mawar 102'" name="name-room">
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-lg">SUBMIT</button>
                             </form>
+                            <!-- END FORM CREATE -->
+                            {% endif %}
                         </div>
                     </div>
                 </div>
+                {% if TYPE != 'EDIT'%}
                 <table class="table table-striped table-dark">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
+                        <th scope="col">Jam Pelajaran</th>
+                        <th scope="col">Hari</th>
+                        <th scope="col">Mata Kuliah</th>
+                        <th scope="col">Dosen</th>
+                        <th scope="col">Ruangan</th>
+                        <th scope="col">Delete/Edit</th>
                       </tr>
                     </thead>
+                    {%for data in ALL_DATA%}
                     <tbody>
                       <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
+                        <th scope="row">{{i}}</th>
+                        <td>{{data['schedule']}}</td>
+                        <td>
+                            {% if data['day'] == '1'%} minggi
+                            {% elif data['day'] == '2'%} senin
+                            {% elif data['day'] == '3'%} selasa
+                            {% elif data['day'] == '4'%} rabu
+                            {% elif data['day'] == '5'%} kamis
+                            {% elif data['day'] == '6'%} jumat
+                            {% elif data['day'] == '7'%} sabtu
+                            {%endif%}
+                        </td>
+                        <td>{{data['name-class']}}</td>
+                        <td>{{data['name-teacher']}}</td>
+                        <td>{{data['name-room']}}</td>
+                        <td>
+                            <form action="/deleteschedule" method="POST">
+                                <input type="hidden" class="form-control" value="{{data['pkey']}}" name="delete-data">
+                                <input type="submit" value="DELETE">
+                            </form>
+
+                            <form action="/editschedule" method="POST">
+                                <input type="hidden" class="form-control" value="{{data['pkey']}}" name="edit-data">
+                                <input type="submit" value="EDIT">
+                            </form>
+                        </td>
+                    {%endfor%}
                       </tr>
                     </tbody>
-                  </table>
+                </table>
+                {%endif%}
             </div>
         </div>
     </section>
-
     
       
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
     
 
 </body>
