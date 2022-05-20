@@ -12,6 +12,7 @@ sys.path.append("pytavia_storage" )
 sys.path.append("pytavia_modules" ) 
 sys.path.append("pytavia_modules/rest_api_controller")
 sys.path.append("pytavia_modules/form_schedule") 
+sys.path.append("pytavia_modules/full_schedule") 
 
 # adding comments
 from pytavia_stdlib  import utils
@@ -25,6 +26,9 @@ from rest_api_controller import module1
 from form_schedule import schedule_app
 from form_schedule import delete_schedule_app
 from form_schedule import edit_schedule_app
+from form_schedule import filter_schedule_app
+
+from full_schedule import view_full_schedule_app
 
 ##########################################################
 
@@ -59,6 +63,20 @@ def api_hi():
 def form():
     params = request.args.to_dict()
     response = schedule_app.schedule_app(app).process( params )
+    return response
+# end def
+
+@app.route("/fullschedule", methods=["GET"])
+def viewfull():
+    params = request.args.to_dict()
+    response = view_full_schedule_app.view_full_schedule_app(app).process( params )
+    return response
+# end def
+
+@app.route("/filter", methods=["POST"])
+def viewfilter():
+    params = request.args.to_dict()
+    response = filter_schedule_app.filter_schedule_app(app).process( params )
     return response
 # end def
 

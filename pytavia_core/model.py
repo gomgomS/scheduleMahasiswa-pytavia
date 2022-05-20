@@ -142,6 +142,7 @@ db = {
         "name-class"                 : "",
         "name-room"                  : "",
         "name-teacher"               : "",
+        "hq_geo_pos"                 : {},     
     },
    
 } 

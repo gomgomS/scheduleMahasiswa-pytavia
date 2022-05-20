@@ -55,6 +55,9 @@ class edit_schedule_app:
             name_classz   = data["name-class"]
             name_teacher  = data["name-teacher"]
             name_room     = data["name-room"]
+            hq_geo_pos     = { "type" : "Point",
+                              "coordinates": [float(data["lon"]),float(data["lat"])]
+                            }
             pkey          = data["pkey"]
 
             self.mgdDB.db_schedule_mahasiswa.update_one(
@@ -65,6 +68,7 @@ class edit_schedule_app:
                     "name-class" : name_classz,
                     "name-teacher" : name_teacher,
                     "name-room" : name_room,
+                    "hq_geo_pos" : hq_geo_pos,
                 }}
             )
             return redirect("/formschedule")
@@ -81,6 +85,9 @@ class edit_schedule_app:
             name_teacher  = data_edit["name-teacher"]
             name_room     = data_edit["name-room"]
             pkey          = data_edit["pkey"]
+            hq_geo_lat    = data_edit['hq_geo_pos']['coordinates'][1]
+            hq_geo_lon   = data_edit['hq_geo_pos']['coordinates'][0]
+            
 
             response = render_template(
                 "form-schedule.html",
@@ -89,6 +96,8 @@ class edit_schedule_app:
                 NEW_NAME_CLASS    = name_classz,
                 NEW_NAME_ROOM  = name_room,
                 NEW_NAME_TEACHER    = name_teacher,
+                HQ_GEO_LON    = hq_geo_lon,
+                HQ_GEO_LAT    = hq_geo_lat,
                 PKEY = pkey,
                 TYPE    = 'EDIT',
             )

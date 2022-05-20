@@ -55,6 +55,12 @@ class schedule_app:
             name_classz   = data["name-class"]
             name_teacher  = data["name-teacher"]
             name_room     = data["name-room"]
+            hq_geo_lat    = float(data["lat"])
+            hq_geo_lon    = float(data["lon"])
+            hq_geo_pos    =  { "type" : "Point",
+                              "coordinates":[hq_geo_lon,hq_geo_lat]
+                            }
+            
 
             mdl_add_new_schedule = database.new(
                 self.mgdDB , "db_schedule_mahasiswa"
@@ -64,6 +70,7 @@ class schedule_app:
             mdl_add_new_schedule.put( "name-class" , name_classz )
             mdl_add_new_schedule.put( "name-teacher" , name_teacher )
             mdl_add_new_schedule.put( "name-room" , name_room )
+            mdl_add_new_schedule.put( "hq_geo_pos" , hq_geo_pos)
 
             db_handle  = database.get_database( config.mainDB )
             bulk_multi = bulk_db_multi.bulk_db_multi({
@@ -81,7 +88,8 @@ class schedule_app:
                 {
                     "status": {"$not":{"$regex":"DEACTIVE"}}
                 }
-            ).sort("day" , 1)
+            ).sort([("day" , 1),("schedule",1)])
+            # sort([("day" , pymongo.ASCENDING),("" , pymongo.ASCENDING)])
             # ).sort("nama " , 1).skip( int(page) * int(num_per_page)).limit(
             #     int(int(page * num_per_page) + num_per_page)
             # )
@@ -105,7 +113,7 @@ class schedule_app:
                     #     "$nin": data_array_added
                     # }
                 }
-            ).sort("day" , 1)
+            ).sort([("day" , 1),("schedule",1)])
             # ).sort("nama " , 1).skip( int(page) * int(num_per_page)).limit(
             #     int(int(page * num_per_page) + num_per_page)
             # )
